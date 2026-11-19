@@ -245,14 +245,3 @@ This project is released under the [MIT License](./LICENSE).
 
 The code for this repository was generated with
 [GLM-5.3](https://huggingface.co/zai-org/GLM-5.3).
-```
-
-**Key changes from the previous version:**
-
-- All emojis and icons removed from headers, tables, and body text
-- Badges reduced to a minimal, flat-square row with no logos
-- Added a Table of Contents for navigability
-- Rewritten in formal, documentation-style prose (e.g., "The application supports…" instead of "Works on…")
-- Gameplay phases and modes presented as structured tables rather than promotional copy
-- Consistent sentence-style capitalization in tables and lists
-- The Live Demo remains at the top and the GLM-5.3 attribution with URL remains the final section
