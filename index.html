@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0f1d">
+  <title>SlopeQuest — A Differential Equation Adventure</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ============ TITLE SCREEN ============ -->
+  <section class="screen active" id="screen-title">
+    <canvas id="title-canvas"></canvas>
+    <div class="title-content">
+      <div class="logo">SLOPE<span class="logo-accent">QUEST</span></div>
+      <p class="tagline">Master differential equations — one field at a time</p>
+      <div class="title-buttons">
+        <button id="btn-play" class="btn btn-primary btn-big">▶&nbsp; Play</button>
+        <button id="btn-howto" class="btn btn-ghost">How to Play</button>
+        <button id="btn-settings" class="btn btn-ghost">⚙ Settings</button>
+      </div>
+      <div class="title-stats" id="title-stats"></div>
+    </div>
+  </section>
+
+  <!-- ============ MAP SCREEN ============ -->
+  <section class="screen" id="screen-map">
+    <header class="map-header">
+      <button id="btn-back-title" class="btn btn-ghost btn-small" aria-label="Home">⌂</button>
+      <h1>Choose your field</h1>
+      <button id="btn-mixed" class="btn btn-ghost btn-small">🎲 Mixed Review</button>
+      <div class="xp-badge">⭐ <span id="xp-total">0</span> XP</div>
+    </header>
+    <div class="map-toolbar">
+      <span class="map-note">All 27 fields are open — jump in anywhere, drill your weak spots, or try the Field Quiz.</span>
+      <button id="btn-quiz" class="btn btn-ghost btn-small">🔎 Field Quiz</button>
+      <button id="btn-formulas" class="btn btn-ghost btn-small">📖 Formula Cards</button>
+    </div>
+    <div class="chapters" id="chapters"></div>
+    <div class="weak-spots" id="weak-spots"></div>
+  </section>
+
+  <!-- ============ GAME SCREEN ============ -->
+  <section class="screen" id="screen-game">
+    <header class="game-header">
+      <button id="btn-quit" class="btn btn-ghost btn-small" aria-label="Quit">✕</button>
+      <div class="game-info">
+        <div id="hud-level" class="hud-level"></div>
+        <div class="focus-wrap" id="focus-wrap">
+          <span class="focus-label">FOCUS</span>
+          <div class="focus-track"><div id="focus-bar"></div></div>
+          <span id="hud-focus-num">100%</span>
+        </div>
+      </div>
+    </header>
+    <div class="canvas-wrap" id="canvas-wrap">
+      <canvas id="game-canvas"></canvas>
+      <div id="eq-banner" class="eq-banner"></div>
+      <div id="toast" class="toast"></div>
+    </div>
+    <div id="phase-panel" class="phase-panel"></div>
+  </section>
+
+  <!-- ============ MODALS ============ -->
+  <div class="modal" id="modal-howto">
+    <div class="modal-card">
+      <h2>How to Play</h2>
+      <p>Each level is a <b>slope field</b> — a map of the differential equation. Every tiny line shows
+         the direction a solution flows at that point. Your job: diagnose it, solve it, then trace it.</p>
+      <div class="howto-step"><div class="howto-num">1</div>
+        <div><h3>DIAGNOSE</h3><p>Classify the equation. Careful — some equations belong to multiple families, and every valid answer counts!</p></div></div>
+      <div class="howto-step"><div class="howto-num">2</div>
+        <div><h3>SOLVE</h3><p>Choose the correct next move at every step. Wrong moves drain your Focus — read the feedback, it's the fastest way to learn. Stuck? The 💡 Nudge removes one wrong option for a little Focus.</p></div></div>
+      <div class="howto-step"><div class="howto-num">3</div>
+        <div><h3>TRACE</h3><p>Drag from the pulsing dot and follow the arrows until you cross the gold goal line (or reach the gold ring, in the phase plains). You're sketching the real solution curve! Arrow keys work too, and the 📐 Euler overlay shows the classic numerical approximation.</p></div></div>
+      <div class="howto-step"><div class="howto-num">4</div>
+        <div><h3>REVEAL</h3><p>See the true curve versus your trace — plus the whole solution family, and a y-vs-t replay on phase-plane fields. Stars come from Focus kept + trace accuracy. Stuck? Peek — but it costs a star.</p></div></div>
+      <p style="font-size:.82rem">Later chapters hide the equation (read the field!), break uniqueness, and enter the <b>phase plane</b> — two variables dancing together. Phase-plane fields can overlay their <b>nullclines</b>. Mixed Review on the map interleaves everything you've seen (and resurfaces fields you haven't touched in a while), and the 🔎 <b>Field Quiz</b> flips the game around: match equations to their fields.</p>
+      <button class="btn btn-primary" data-close>Got it!</button>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-settings">
+    <div class="modal-card">
+      <h2>Settings</h2>
+      <div class="setting-row">
+        <div><b>Sound effects</b><p style="margin:0">Synthesized beeps and chimes</p></div>
+        <label class="switch"><input type="checkbox" id="snd-toggle"><span class="slider"></span></label>
+      </div>
+      <div class="setting-row">
+        <div><b>Practice mode</b><p style="margin:0">No Focus drain, no stars or XP saved — pure drilling</p></div>
+        <label class="switch"><input type="checkbox" id="practice-toggle"><span class="slider"></span></label>
+      </div>
+      <div class="setting-row">
+        <div><b>Reset progress</b><p style="margin:0">Erases all stars, XP and error log</p></div>
+        <button class="btn btn-danger btn-small" id="btn-reset">Reset</button>
+      </div>
+      <button class="btn btn-primary" data-close>Done</button>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-formulas">
+    <div class="modal-card">
+      <h2>📖 Formula Cards</h2>
+      <p style="margin:0">Earn a ⭐ in a chapter to unlock its card.</p>
+      <div id="formulas-body" class="formulas-body"></div>
+      <button class="btn btn-primary" data-close>Close</button>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-quiz">
+    <div class="modal-card">
+      <h2>🔎 Field Quiz</h2>
+      <p style="margin:0">Match each equation to its slope field. Read the arrows — equilibria, symmetry and flow direction all give it away.</p>
+      <div id="quiz-body"></div>
+      <button class="btn btn-primary" data-close>Close</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
